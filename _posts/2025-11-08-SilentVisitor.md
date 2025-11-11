@@ -90,3 +90,4 @@ The main user of the Windows system is `ammar`. If we scroll through the user's 
 
 ***The malware uses a secret token to communicate with the C2 server. What is the value of this key?***
 
+UNFINISHED
