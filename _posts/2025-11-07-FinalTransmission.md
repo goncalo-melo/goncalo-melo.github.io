@@ -3,6 +3,7 @@ title: "Final Transmission"
 date: 2025-11-07 18:30:00 +0000
 categories: [Writeups, Forensics, Spooky CTF 2025]
 tags: [forensics, writeup]
+description: Spooky CTF 2025 - Final Transmission Writeup
 ---
 
 ### Description
