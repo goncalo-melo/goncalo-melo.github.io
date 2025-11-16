@@ -5,25 +5,25 @@ categories: [Writeups, Reverse, 1337UP Live CTF 2024]
 tags: [reverse, writeup]
 ---
 
-### Description
+## Description
 
 The casino thinks they've rigged their slots so well, they can give every player $100 free play! Of course, there's always some small print: you can't cash out unless you hit the jackpot and each player only gets 3 minutes play time.
 
 `nc riggedslot1.ctf.intigriti.io 1332`
 
-### Handout
+## Handout
 
 - rigged_slot1
 
-### Solve
+## Solve
 
-#### Disclaimer
+### Disclaimer
 
 **In this writeup I present an unintended solution for the challenge.**
 
 Rigged Slot Machine 1 is a warmup challenge from the 1337UP LIVE CTF 2024 organized by Intigriti.
 
-In this challenge we are presented with a program `rigged_slot1` that allow us to play on a slot machine by betting our budget of 100$ until we manage to hit the jackpot value. However, as you can see by the image below, the slot machine is **clearly** rigged.
+In this challenge we are presented with a program `rigged_slot1` that allow us to play on a slot machine by betting our budget of $100 until we manage to hit the jackpot value. However, as you can see by the image below, the slot machine is **clearly** rigged.
 
 ![](assets/img/RiggedSlotMachine1/img1.png)
 
@@ -37,9 +37,9 @@ First, I looked into the `main` function, the entry point for the given program.
 
 1. A 3 minute alarm is setup, indicating the time limit of our playing session;
 2. The player input is validated to guarantee the bet amount provided is a valid numeric value;
-3. The bet amount is checked. The player can only bet as much as money as he has and this value cannot exceed 100$;
+3. The bet amount is checked. The player can only bet as much as money as he has and this value cannot exceed $100;
 4. The `play` function is called with our bet amount and our current balance amount as arguments;
-5. If the current balance exceeds the jackpot value (133742$), then the `payout` function is called.
+5. If the current balance exceeds the jackpot value (`133742$`), then the `payout` function is called.
 
 Now looking into the `play` function:
 
@@ -92,7 +92,7 @@ That's exactly what this solution is about.
 If we look closely into the code we can see that in the beggining of `main` the `srand` function from the C standard library is being called.
 
 > `srand`: sets the seed for the random number generator used by `rand`.
-{: prompt-tip}
+{: .prompt-tip }
 
 The seed is an unsigned integer used to initialize the random number generator. Typically, a unique value like the current time is used, and this program is no exception.
 
@@ -111,7 +111,7 @@ In fact, if we predict the seed correctly, all we need to do is replicate the us
 The program uses `time(0)` as its seed.
 
 > `time(0)` returns the current time as seconds since the Unix epoch.
-{: prompt-tip}
+{: .prompt-tip }
 
 Turns out "seconds" is not precise enough for us to miss the prediction of the correct seed when we connect to the server. If the server were to use milliseconds as the seed, the delay and difference in time measured in the server versus locally would be enough to stop this attack. 
 
@@ -133,7 +133,7 @@ To make sure we replicate the correct seed we can try accounting for the server 
 
 ![](assets/img/RiggedSlotMachine1/exploit.png)
 
-As you can see, our multiplier predictions match exactly with the server's response of how much money we won. This way, for each bet I knew the multiplier would be 0x I would bet 1$ and for any other multiplier (1x, 2x, 3x, 5x and 100x) I would bet the maximum value, until we reach the flag.
+As you can see, our multiplier predictions match exactly with the server's response of how much money we won. This way, for each bet I knew the multiplier would be 0x I would bet $1 and for any other multiplier (1x, 2x, 3x, 5x and 100x) I would bet the maximum value, until we reach the flag.
 
 ![](assets/img/RiggedSlotMachine1/flag.png)
 
