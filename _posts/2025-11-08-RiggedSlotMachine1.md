@@ -123,7 +123,7 @@ Technically, three conditions have to be met for this to work:
 
 ![](assets/img/RiggedSlotMachine1/mimic.png)
 
-![](assets/img/RiggedSlotMachine1/calculate_multiplier)
+![](assets/img/RiggedSlotMachine1/calculate_multiplier.png)
 
 To make sure we replicate the correct seed we can try accounting for the server delay by adjusting the timestamp manually.
 
