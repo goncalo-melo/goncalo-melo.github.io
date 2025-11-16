@@ -1,6 +1,6 @@
 ---
 title: "Silent Visitor"
-date: 2025-11-08 18:30:00 +0000
+date: 2025-11-11 18:30:00 +0000
 categories: [Writeups, Forensics, Securinets Quals CTF 2025]
 tags: [forensics, writeup]
 description: 

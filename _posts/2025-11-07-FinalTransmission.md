@@ -88,13 +88,13 @@ The `client.txt` and `server.txt` files provide all the information needed to de
 
 We can define these parameters in wireshark by navigating to: `Edit → Preferences → Protocols → ESP` and manually editing the values for each field.
 
-![](assets/img/esp.png)
+![](assets/img/FinalTransmission/esp.png)
 
 After correctly applying the ESP parameters and decrypting the packets we notice that there is another layer of encryption. This time the traffic is TLS encrypted. TLS packets can be decrypted by providing the SSL logs information, which we happen to have on the `sslkeys.log` file.
 
 To do so, we navigate to `Edit → Preferences → Protocols → TLS` and point the (Pre)-Master-Secret log filename to our `sslkeys.log` full path.
 
-![](assets/img/tls.png)
+![](assets/img/FinalTransmission/tls.png)
 
 Now that we have the TLS decrypted data we can see exactly what is happening during the TLS session.
 
@@ -126,7 +126,7 @@ After authentication, the server tells client to connect to IP 10.0.0.3 and port
 
 We then look for the TCP stream with the file bytes and extract them. We can confirm that the stream is carrying a SQLite3 database file by looking at the magic bytes.
 
-![](assets/img/sql.png)
+![](assets/img/FinalTransmission/sql.png)
 
 After saving the raw bytes into a file we can use `sqlite3`to investigate.
 
