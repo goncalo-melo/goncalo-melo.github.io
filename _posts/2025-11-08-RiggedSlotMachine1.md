@@ -3,6 +3,7 @@ title: "Rigged Slot Machine 1"
 date: 2024-11-18 18:30:00 +0000
 categories: [Writeups, Reverse, 1337UP Live CTF 2024]
 tags: [reverse, writeup]
+description: 1337UP LIVE CTF 2024 - Rigged Slot Machine 1 Writeup
 ---
 
 ## Description
@@ -38,6 +39,7 @@ Enter your bet amount (up to $100 per spin): 50
 You lost $50.
 Current Balance: $0
 You're out of money! Game over!
+
 shieda@pop-os:~/Desktop/CTFs/1337upctf2024/rigged-slot-machine-1$ ./rigged_slot1 
 Welcome to the Rigged Slot Machine!
 You start with $100. Can you beat the odds?
