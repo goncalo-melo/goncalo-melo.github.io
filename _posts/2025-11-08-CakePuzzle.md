@@ -249,7 +249,7 @@ Story
 
 Our initial state falls exactly into that category, as it's shown in the next image.
 
-![](assets/img/CakePuzzle/unsolvable_goal_state.jpg)
+![](assets/img/CakePuzzle/unsolvable_goal_state.png)
 
 However, this is only true for the standard goal state of the puzzle. The rules
 change depending on the goal state, which means we can find a more
@@ -260,7 +260,7 @@ Indeed, if we choose another common goal state where the empty space is
 in the top left corner, instead of the bottom right one, then we reach a
 solution. Here is a representation of that goal state:
 
-![](assets/img/CakePuzzle/goal_state.png)
+![](assets/img/CakePuzzle/goal_state.jpg)
 
 After indicating the solver to use these states, we are given a possible
 (optimal) solution:
