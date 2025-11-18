@@ -6,16 +6,18 @@ tags: [forensics, writeup]
 description: Securinets Quals CTF 2025 - Silent Visitor Writeup
 ---
 
-# Description
+## UNFINISHED
+
+## Description
 
 A user reported suspicious activity on their Windows workstation. Can you investigate the incident and uncover what really happened?
 
 `nc foren-1f49f8dc.p1.securinets.tn 1337`
-# Handout
+## Handout
 
 - test.ad1
 
-# Solve 
+## Solve 
 
 ```sh
 shieda@pop-os:~/Desktop/CTFs/securinetsctf2025/silent-visitor$ ls

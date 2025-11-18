@@ -1,16 +1,16 @@
 ---
 title: "Cake Puzzle"
-date: 2025-11-08 18:30:00 +0000
+date: 2023-12-08 18:30:00 +0000
 categories: [Writeups, Reverse, Cake CTF 2023]
 tags: [reverse, writeup]
 description: Cake CTF 2023 - Cake Puzzle Writeup
 ---
 
-# Description
+## Description
 
 Someone cut a cake and scrambled. `nc others.2023.cakectf.com 14001`
 
-# Handout
+## Handout
 
 - chal
 
@@ -19,23 +19,37 @@ compiled program which we are supposed to reverse engineer. It also
 gives us a Netcat command to connect to their server:
 `nc others.2023.cakectf.com 14001`.
 
-# Solve
+## Solve
 
 The first step I took was to run the file with executable permissions.
 We are prompted to insert an input which seems to be subsequent, as it's
 demonstrated below.
 
+```sh
+shieda@pop-os:~/Desktop/CTFs/cakectf2023/cakepuzzle$ file chal 
+chal: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=4c2b97895e9493536557f72e973e5ed194a49854, for GNU/Linux 3.2.0, not stripped
+shieda@pop-os:~/Desktop/CTFs/cakectf2023/cakepuzzle$ chmod +x chal 
+shieda@pop-os:~/Desktop/CTFs/cakectf2023/cakepuzzle$ ./chal 
+> hello
+> flag
+> pls?
+> okey
+> 
+```
+
 I decided to use Ghidra to perform static analysis on the executable.
 
 
-## main() function
+### `main()` function
 
 Upon analyzing the symbols and decompiling the code we can search for
 the `main()` function. The goal of the research is to understand what
 the program is doing in its integrity, so it's common and best practice
 to rename functions and variables as we advance further.
 
-As we can see in the following image, there are a few key points to notice:
+As we can see in the following code snippet, there are a few key points to notice:
+
+![](assets/img/CakePuzzle/main.png)
 
 1. There is an infinite loop that is checking the value returned by the
    `q()` function. At first glance, if the returned value is 0, then we
@@ -48,9 +62,12 @@ As we can see in the following image, there are a few key points to notice:
    `e()` function.
 
 
-## q() function
+### `q()` function
 
 Let's now take a look at the `q()` function in depth:
+
+![](assets/img/CakePuzzle/q.png)
+
 
 1. Notice these instructions basically represent a pair of nested for
    loops, iterating `local_c` from 0 to 2 **(outer loop)** and `local_10` from
@@ -66,16 +83,21 @@ data type being pointed to. In this case, the data type is `int`, which
 typically occupies 4 bytes in memory. This usage of `\*4` aligns with
 the assumption that each element in the matrix is an integer.
 
-## win() function
+### `win()` function
+
+![](assets/img/CakePuzzle/win.png)
 
 By looking at the `win()` function, we confirm that, indeed,
 it returns the flag.
 
-## e() function
+### `e()` function
 
 Now, we can assume that our input is somehow modifying the matrix `M`
 until the `q()` function returns 0. Let's look at the function `e()`
 and understand what it's doing with the input.
+
+![](assets/img/CakePuzzle/e.png)
+
 
 1. Function `s()` is being called. Based on the context of the problem,
    that is becoming clearer, we'll assume `local_c` and `local_10` are
@@ -91,12 +113,16 @@ and understand what it's doing with the input.
    since before performing `f()`, the program is making sure indexes out
    of bounds are not accessed.
 
-## s() function
+### `s()` function
+
+![](assets/img/CakePuzzle/e.png)
 
 This function iterates trough all the possible indexes of the 4 by 4
 matrix, and assigns `param1` and `param2` the indexes where the value is 0.
 
-## f() function
+### `f()` function
+
+![](assets/img/CakePuzzle/f.png)
 
 Finally, the `f()` function swaps the values of the matrix using the
 [XOR swap algorithm](https://en.wikipedia.org/wiki/XOR_swap_algorithm),
@@ -114,11 +140,18 @@ which is a very efficient way of swapping two values between variables. I presen
 12 5
 ```
 
-## Interpretation
+### Interpretation
 
 It is now clear that this program represents a very well known puzzle:
 the [15 Puzzle](https://en.wikipedia.org/wiki/15_Puzzle)!
 
+**Unsolved 15 Puzzle:**
+
+![](assets/img/CakePuzzle/unsolved.png)
+
+**Solved 15 Puzzle:**
+
+![](assets/img/CakePuzzle/solved.png)
 
 We have a 4 by 4 matrix, representing our board and the 0 value
 representing the empty space. Furthermore, the moves `U`, `R`, `D`, `L`
@@ -129,7 +162,24 @@ value of the matrix, it has to be inferior than the value below it and
 on its right. Let's change the names of the functions and variables
 accordingly to facilitate reading the decompiled code.
 
-## Solving with IDA\*
+**New `main()` function:**
+
+![](assets/img/CakePuzzle/new_main.png)
+
+**New `q()` function:**
+
+![](assets/img/CakePuzzle/check_conditions.png)
+
+**New `e()` function:**
+
+![](assets/img/CakePuzzle/move.png)
+
+**New `s()` function:**
+
+![](assets/img/CakePuzzle/get_empty_space.png)
+
+
+### Solving with IDA\*
 
 The approach to solve the problem is using a 15 Puzzle solver that uses
 Artificial Intelligence algorithms like [IDA\* (Iterative deepening
@@ -141,6 +191,33 @@ Puzzle and the **goal state** (goal matrix).
 The initial state of the matrix `M` can be found in memory before even
 executing the program using `gdb` like so:
 
+```sh
+shieda@pop-os:~/Desktop/CTFs/cakectf2023/cakepuzzle$ gdb chal
+GNU gdb (Ubuntu 12.1-0ubuntu1~22.04.2) 12.1
+Copyright (C) 2022 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from chal...
+(No debugging symbols found in chal)
+(gdb) print &M
+$1 = (<data variable, no debug info> *) 0x4080 <M>
+(gdb) x/16x 0x4080
+0x4080 <M>:	0x445856db	0x4c230304	0x0022449f	0x671a96b7
+0x4090 <M+16>:	0x6c5644f7	0x7ff46287	0x6ee9c829	0x5cda2e72
+0x40a0 <M+32>:	0x00000000	0x698e88c9	0x33e65a4f	0x50cc5c54
+0x40b0 <M+48>:	0x1349831a	0x53c88f74	0x25858ab9	0x72f976d8
+```
 
 Our goal is to have a matrix of numbers from 0 to 15, representing the
 initial state. The values inside the matrix are all in
@@ -150,6 +227,14 @@ Since the conditions only care about the relative
 inferiority/superiority of the values, we can map them to numbers from 0
 to 15 based on it. We end up with this 4 by 4 matrix:
 
+```py
+M = [
+     [5, 6, 1, 10],
+     [12, 15, 13, 9],
+     [0, 11, 4, 7],
+     [2, 8, 3, 14],
+    ]
+```
 
 We can now give this initial state to the solver, along with a goal
 state, and it will try to find the optimal solution. There is, however,
@@ -164,6 +249,7 @@ Story
 
 Our initial state falls exactly into that category, as it's shown in the next image.
 
+![](assets/img/CakePuzzle/unsolvable_goal_state.png)
 
 However, this is only true for the standard goal state of the puzzle. The rules
 change depending on the goal state, which means we can find a more
@@ -174,15 +260,21 @@ Indeed, if we choose another common goal state where the empty space is
 in the top left corner, instead of the bottom right one, then we reach a
 solution. Here is a representation of that goal state:
 
+![](assets/img/CakePuzzle/goal_state.png)
+
 After indicating the solver to use these states, we are given a possible
 (optimal) solution:
+
+![](assets/img/CakePuzzle/solvable_goal_state.png)
 
 All that's left is to translate the moves into `U`, `R`, `D`, `L` and
 subsequently give them to the input prompt after connecting to the
 CakeCTF server and port indicated with the following command:
 `nc others.2023.cakectf.com 14001`
 
-Possible solution: `D R U R U L L D R R U R D L D L U U R D D L U U U R D L L U R D L D D R R R` - **CakeCTF{wh0_at3_a_missing_pi3c3_0f_a_cak3}**
+Possible solution: `D R U R U L L D R R U R D L D L U U R D D L U U U R D L L U R D L D D R R R`
+
+![](assets/img/CakePuzzle/flag.png)
 
 The next image shows the state of the matrix after performing the moves from the
 solution. The conditions ended up being met before we reached the
@@ -194,3 +286,4 @@ given by the solver because the conditions were met before we reached
 our defined goal state. Note that the conditions didn't allow the
 check of the values below and on the right if one of them didn't exist.
 
+![](assets/img/CakePuzzle/end_state.png)
