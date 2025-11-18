@@ -6,18 +6,18 @@ tags: [forensics, writeup]
 description: Spooky CTF 2025 - Final Transmission Writeup
 ---
 
-## Description
+# Description
 
 A corrupted transmission has been recovered from a dying network node. Your task is to extract and analyze the recovered disk image to uncover what Helios Ark tried to preserve. Somwehere inside lies the truth of this world.
 
-## Handout
+# Handout
 
 - final_transmission.pcap
 - client.txt
 - server.txt
 - sslkeys.log
 
-## Solve
+# Solve
 
 ```sh
 shieda@pop-os:~/Desktop/CTFs/spookyctf2025/final-transmission$ cat client.txt 
