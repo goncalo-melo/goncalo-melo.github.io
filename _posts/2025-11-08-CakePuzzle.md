@@ -249,7 +249,7 @@ Story
 
 Our initial state falls exactly into that category, as it's shown in the next image.
 
-![](assets/img/CakePuzzle/unsolvable_goal_state.png)
+![](assets/img/CakePuzzle/unsolvable_goal_state.jpg)
 
 However, this is only true for the standard goal state of the puzzle. The rules
 change depending on the goal state, which means we can find a more
