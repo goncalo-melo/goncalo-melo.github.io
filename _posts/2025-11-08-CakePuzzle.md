@@ -77,10 +77,10 @@ Let's now take a look at the `q()` function in depth:
 reach our `win()` function we need to ensure the loops reach their end
 without ever one of these conditions being met. We are introcuded to the
 varibale `M` which appears to be a matrix. The conditions seem to be
-accessing and comparing values of the matrix. The `\*4` in the code is
+accessing and comparing values of the matrix. The `*4` in the code is
 used for pointer arithmetic, specifically to account for the size of the
 data type being pointed to. In this case, the data type is `int`, which
-typically occupies 4 bytes in memory. This usage of `\*4` aligns with
+typically occupies 4 bytes in memory. This usage of `*4` aligns with
 the assumption that each element in the matrix is an integer.
 
 ### `win()` function
@@ -144,10 +144,6 @@ which is a very efficient way of swapping two values between variables. I presen
 
 It is now clear that this program represents a very well known puzzle:
 the [15 Puzzle](https://en.wikipedia.org/wiki/15_Puzzle)!
-
-**Unsolved 15 Puzzle:**
-
-![](assets/img/CakePuzzle/unsolved.png)
 
 **Solved 15 Puzzle:**
 
