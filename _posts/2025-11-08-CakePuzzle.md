@@ -270,7 +270,51 @@ CakeCTF server and port indicated with the following command:
 
 Possible solution: `D R U R U L L D R R U R D L D L U U R D D L U U U R D L L U R D L D D R R R`
 
-![](assets/img/CakePuzzle/flag.png)
+```sh
+shieda@pop-os:~/Desktop/CTFs/cakectf2023/cakepuzzle$ nc others.2023.cakectf.com 14001
+> D
+> R
+> U
+> R
+> U
+> L
+> D
+> R
+> R
+> U
+> D
+> D
+> L
+> U
+> U
+> R
+> D
+> D
+> R
+> R
+> R
+> D
+> L
+> R
+> U
+> L
+> D
+> R
+> R
+> U
+> R
+> R
+> U
+> D
+> L
+> R
+> D
+> R
+> R
+> R
+> R
+CakeCTF{wh0_at3_a_missing_pi3c3_0f_a_cak3}
+```
 
 The next image shows the state of the matrix after performing the moves from the
 solution. The conditions ended up being met before we reached the
